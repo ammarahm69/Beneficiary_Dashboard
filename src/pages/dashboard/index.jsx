@@ -1,6 +1,28 @@
 import React, { useState } from 'react';
 import {
-  Avatar, AvatarGroup, Button, Grid, List, ListItemAvatar, ListItemButton, ListItemSecondaryAction, ListItemText, Stack, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField
+  Avatar,
+  AvatarGroup,
+  Button,
+  Grid,
+  List,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemSecondaryAction,
+  ListItemText,
+  Stack,
+  Typography,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField
 } from '@mui/material';
 
 // project import
@@ -45,9 +67,7 @@ export default function DashboardDefault() {
   const handleSubmit = () => {
     if (editIndex !== null) {
       // Update existing beneficiary
-      const updatedBeneficiaries = beneficiaries.map((beneficiary, index) =>
-        index === editIndex ? formData : beneficiary
-      );
+      const updatedBeneficiaries = beneficiaries.map((beneficiary, index) => (index === editIndex ? formData : beneficiary));
       setBeneficiaries(updatedBeneficiaries);
     } else {
       // Add new beneficiary
@@ -78,7 +98,7 @@ export default function DashboardDefault() {
     <Grid container rowSpacing={4.5} columnSpacing={2.75}>
       {/* row 1 */}
       <Grid item xs={12} sx={{ mb: -2.25 }}>
-        <Typography variant="h5">Dashboard</Typography>
+        <Typography variant="h5">SMIT Portal</Typography>
       </Grid>
       <Grid item xs={12} sm={6} md={4} lg={3}>
         <AnalyticEcommerce title="Daily Insights" count="33" percentage={29.3} extra="35,000" />
@@ -90,16 +110,26 @@ export default function DashboardDefault() {
         <AnalyticEcommerce title="Reports and Logs" count="18,800" percentage={27.4} isLoss color="warning" extra="1,943" />
       </Grid>
 
-      <Grid item xs={12}>
-        <Button variant="contained" color="primary" onClick={handleOpen}>
-          Add Beneficiary
-        </Button>
-      </Grid>
-      {/* Search Bar */}
-      <Grid item xs={12} md={3}>
-        <TextField variant="outlined" placeholder="Search beneficiaries..." onChange={handleSearch} size="small" fullWidth />
-      </Grid>
+      <Grid container spacing={2} alignItems="center" justifyContent="space-between">
+        {/* Header Section */}
+        <Grid item xs={12}>
+          <Typography style={{ fontSize: '20px', fontWeight: 'bold', marginLeft: '30px', marginTop: '10px' }}>
+            Beneficiary Registration
+          </Typography>
+        </Grid>
 
+        {/* Add Beneficiary Button */}
+        <Grid item xs={12} md={2}>
+          <Button variant="contained" color="primary" fullWidth onClick={handleOpen} sx={{ marginLeft: '30px' }}>
+            Add Beneficiary
+          </Button>
+        </Grid>
+
+        {/* Search Bar */}
+        <Grid item xs={12} md={6}>
+          <TextField variant="outlined" placeholder="Search beneficiaries..." onChange={handleSearch} size="small" fullWidth />
+        </Grid>
+      </Grid>
 
       {/* Modal */}
 
@@ -152,8 +182,12 @@ export default function DashboardDefault() {
                 <TableCell>{beneficiary.phone}</TableCell>
                 <TableCell>{beneficiary.address}</TableCell>
                 <TableCell>
-                  <Button color="primary" onClick={() => handleEdit(index)}>Edit</Button>
-                  <Button color="secondary" onClick={() => handleDelete(index)}>Delete</Button>
+                  <Button color="primary" onClick={() => handleEdit(index)}>
+                    Edit
+                  </Button>
+                  <Button color="secondary" onClick={() => handleDelete(index)}>
+                    Delete
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
