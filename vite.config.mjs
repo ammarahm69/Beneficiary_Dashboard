@@ -14,16 +14,9 @@ export default defineConfig({
     global: 'window'
   },
   resolve: {
-    alias: [
-      {
-        find: /^~(.+)/,
-        replacement: path.join(process.cwd(), 'node_modules/$1')
-      },
-      {
-        find: /^src(.+)/,
-        replacement: path.join(process.cwd(), 'src/$1')
-      }
-    ]
+    alias: {
+      '@': path.resolve(__dirname, './src'), // Simplified alias for src
+    },
   },
   server: {
     // this ensures that the browser opens upon server start
