@@ -1,20 +1,7 @@
 import React, { useState } from 'react';
-import Avatar from '@mui/material/Avatar';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import List from '@mui/material/List';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
-import ListItemText from '@mui/material/ListItemText';
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
+import {
+  Avatar, AvatarGroup, Button, Grid, List, ListItemAvatar, ListItemButton, ListItemSecondaryAction, ListItemText, Stack, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField
+} from '@mui/material';
 
 // project import
 import MainCard from 'components/MainCard';
@@ -24,7 +11,6 @@ import ReportAreaChart from './ReportAreaChart';
 import UniqueVisitorCard from './UniqueVisitorCard';
 import SaleReportCard from './SaleReportCard';
 import OrdersTable from './OrdersTable';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material';
 
 // ==============================|| DASHBOARD - DEFAULT ||============================== //
 
@@ -38,8 +24,13 @@ export default function DashboardDefault() {
   });
   const [beneficiaries, setBeneficiaries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [editIndex, setEditIndex] = useState(null);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => {
+    setFormData({ name: '', cnic: '', phone: '', address: '' });
+    setEditIndex(null);
+    setOpen(true);
+  };
   const handleClose = () => setOpen(false);
 
   const handleChange = (e) => {
@@ -52,9 +43,30 @@ export default function DashboardDefault() {
   };
 
   const handleSubmit = () => {
-    setBeneficiaries([...beneficiaries, formData]);
+    if (editIndex !== null) {
+      // Update existing beneficiary
+      const updatedBeneficiaries = beneficiaries.map((beneficiary, index) =>
+        index === editIndex ? formData : beneficiary
+      );
+      setBeneficiaries(updatedBeneficiaries);
+    } else {
+      // Add new beneficiary
+      setBeneficiaries([...beneficiaries, formData]);
+    }
     setFormData({ name: '', cnic: '', phone: '', address: '' });
+    setEditIndex(null);
     handleClose();
+  };
+
+  const handleEdit = (index) => {
+    setFormData(beneficiaries[index]);
+    setEditIndex(index);
+    setOpen(true);
+  };
+
+  const handleDelete = (index) => {
+    const updatedBeneficiaries = beneficiaries.filter((_, i) => i !== index);
+    setBeneficiaries(updatedBeneficiaries);
   };
 
   // Filter beneficiaries based on search query
@@ -83,16 +95,16 @@ export default function DashboardDefault() {
           Add Beneficiary
         </Button>
       </Grid>
-
       {/* Search Bar */}
-      <Grid item>
+      <Grid item xs={12} md={3}>
         <TextField variant="outlined" placeholder="Search beneficiaries..." onChange={handleSearch} size="small" fullWidth />
       </Grid>
+
 
       {/* Modal */}
 
       <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-        <DialogTitle>Enter Details</DialogTitle>
+        <DialogTitle>{editIndex !== null ? 'Edit Beneficiary' : 'Add Beneficiary'}</DialogTitle>
         <DialogContent>
           <Stack spacing={2} mt={1}>
             <TextField fullWidth label="Name" name="name" value={formData.name} onChange={handleChange} variant="outlined" />
@@ -115,7 +127,7 @@ export default function DashboardDefault() {
             Cancel
           </Button>
           <Button onClick={handleSubmit} variant="contained" color="primary">
-            Submit
+            {editIndex !== null ? 'Update' : 'Submit'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -129,6 +141,7 @@ export default function DashboardDefault() {
               <TableCell>CNIC</TableCell>
               <TableCell>Phone Number</TableCell>
               <TableCell>Address</TableCell>
+              <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -138,6 +151,10 @@ export default function DashboardDefault() {
                 <TableCell>{beneficiary.cnic}</TableCell>
                 <TableCell>{beneficiary.phone}</TableCell>
                 <TableCell>{beneficiary.address}</TableCell>
+                <TableCell>
+                  <Button color="primary" onClick={() => handleEdit(index)}>Edit</Button>
+                  <Button color="secondary" onClick={() => handleDelete(index)}>Delete</Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -160,14 +177,12 @@ export default function DashboardDefault() {
               <Typography variant="h6" color="text.secondary">
                 This Week Statistics
               </Typography>
-              <Typography variant="h3">$7,650</Typography>
+              <Typography variant="h3">\$7,650</Typography>
             </Stack>
           </Box>
           <MonthlyBarChart />
         </MainCard>
       </Grid>
-
-      {/* Add the remaining rows and components */}
     </Grid>
   );
 }
